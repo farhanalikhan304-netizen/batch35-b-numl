@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Profile | CLASS HUB — Batch 35 — BSSE (Afternoon)</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/navbar.css">
+  <link rel="stylesheet" href="../css/cards.css">
+  <link rel="stylesheet" href="../css/forms.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+    <!-- Supabase JS Client (Local bundle with CDN fallback) -->
+  <script src="../js/supabase.js"></script>
+  <script>if (!window.supabase) document.write('<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"><\/script>');</script>
+  <link rel="icon" type="image/svg+xml" href="../assets/icons/favicon.svg">
+</head>
+<body>
+
+  <header class="site-navbar">
+    <div class="navbar-inner">
+      <a href="dashboard.html" class="navbar-brand">
+        <div class="brand-logo-icon">CH</div>
+        <div class="brand-text">
+          <span class="brand-name">CLASS HUB</span>
+          <span class="brand-cohort">Batch 35 — BSSE (Afternoon)</span>
+        </div>
+      </a>
+      <nav aria-label="Main Navigation">
+        <ul class="nav-links desktop-only">
+          <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
+          <li><a href="subjects.html" class="nav-link">Subjects</a></li>
+          <li><a href="documents.html" class="nav-link">Documents</a></li>
+          <li><a href="queries.html" class="nav-link">Queries</a></li>
+          <li><a href="profile.html" class="nav-link active">Profile</a></li>
+        </ul>
+      </nav>
+      <div class="navbar-user">
+        <a href="profile.html" class="user-profile-badge">
+          <div class="user-avatar">ST</div>
+          <div class="user-info">
+            <span class="user-name">Student</span>
+            <span class="user-role-label">Student</span>
+          </div>
+        </a>
+        <button type="button" class="btn-logout">🚪 Logout</button>
+        <button type="button" class="mobile-nav-toggle" aria-label="Toggle navigation menu">☰</button>
+      </div>
+    </div>
+    <div class="mobile-nav-menu">
+      <ul class="nav-links">
+        <li><a href="dashboard.html" class="nav-link">📊 Dashboard</a></li>
+        <li><a href="subjects.html" class="nav-link">📚 All Subjects</a></li>
+        <li><a href="documents.html" class="nav-link">📁 Study Documents</a></li>
+        <li><a href="queries.html" class="nav-link">💬 Academic Queries</a></li>
+        <li><a href="profile.html" class="nav-link active">👤 My Profile</a></li>
+      </ul>
+      <div class="mobile-user-actions">
+        <span class="user-role-label role-badge student">Student</span>
+        <button type="button" class="btn-logout">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-wrapper">
+    <header class="page-header">
+      <div class="page-title-group">
+        <h1>👤 Student Account Profile</h1>
+        <p class="page-subtitle">View your verified account credentials, student identity, and enrollment status.</p>
+      </div>
+    </header>
+
+    <div style="max-width:680px;margin:0 auto;">
+      <section class="card" style="padding:2rem;">
+        <div style="display:flex;align-items:center;gap:1.25rem;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border);">
+          <div class="user-avatar" style="width:4rem;height:4rem;font-size:1.5rem;" id="profile-avatar">ST</div>
+          <div>
+            <h2 id="profile-display-name" style="font-size:1.4rem;">Student Name</h2>
+            <div style="display:flex;gap:0.5rem;margin-top:0.35rem;align-items:center;">
+              <span class="role-badge student" id="profile-role">Student</span>
+              <span class="status-pill active" id="profile-status">Active</span>
+            </div>
+          </div>
+        </div>
+
+        <form id="form-update-profile">
+          <div class="form-group">
+            <label for="profile-full-name" class="form-label">Full Name</label>
+            <input type="text" id="profile-full-name" class="form-control" required>
+            <span class="form-helper">You may update your display name if there are spelling corrections.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="profile-username" class="form-label">Assigned Username</label>
+            <input type="text" id="profile-username" class="form-control" readonly disabled>
+            <span class="form-helper">🔒 Assigned usernames are fixed and cannot be modified.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="profile-email" class="form-label">Assigned University Email</label>
+            <input type="email" id="profile-email" class="form-control" readonly disabled>
+            <span class="form-helper">🔒 University email is managed by administrators.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="profile-created" class="form-label">Account Created</label>
+            <input type="text" id="profile-created" class="form-control" readonly disabled>
+          </div>
+
+          <div style="margin-top:1.5rem;display:flex;justify-content:flex-end;">
+            <button type="submit" id="btn-save-profile" class="btn btn-primary">Save Changes</button>
+          </div>
+        </form>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 <span class="brand-title">CLASS HUB</span> — Batch 35 — BSSE (Afternoon). University Academic Portal.</p>
+  </footer>
+
+  <script src="../js/config.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      const profile = await window.CLASS_HUB_AUTH.requireAuth(["student", "admin", "head_admin"]);
+      if (!profile) return;
+
+      document.getElementById("profile-display-name").textContent = profile.full_name;
+      document.getElementById("profile-full-name").value = profile.full_name;
+      document.getElementById("profile-username").value = `@${profile.username}`;
+      document.getElementById("profile-email").value = profile.email;
+      document.getElementById("profile-created").value = window.CLASS_HUB_UTILS.formatDate(profile.created_at);
+      document.getElementById("profile-role").textContent = profile.role.toUpperCase();
+      document.getElementById("profile-status").textContent = profile.status.toUpperCase();
+
+      const initials = profile.full_name.split(" ").map(n => n[0]).join("").substring(0, 2).toUpperCase();
+      document.getElementById("profile-avatar").textContent = initials || "ST";
+
+      // Profile name update
+      const form = document.getElementById("form-update-profile");
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const newName = document.getElementById("profile-full-name").value.trim();
+        if (!newName) return;
+
+        const btn = document.getElementById("btn-save-profile");
+        try {
+          btn.disabled = true;
+          btn.innerHTML = `<span class="spinner spinner-sm spinner-light"></span> Saving...`;
+
+          const { error } = await window.supabaseClient
+            .from("profiles")
+            .update({ full_name: newName, updated_at: new Date().toISOString() })
+            .eq("id", profile.id);
+
+          if (error) throw error;
+
+          window.CLASS_HUB_UTILS.showToast("Profile name updated successfully!", "success");
+          document.getElementById("profile-display-name").textContent = newName;
+          document.querySelectorAll(".user-name").forEach(el => el.textContent = newName);
+        } catch (err) {
+          console.error("Profile update error:", err);
+          window.CLASS_HUB_UTILS.showToast("Failed to update profile name.", "danger");
+        } finally {
+          btn.disabled = false;
+          btn.innerHTML = `Save Changes`;
+        }
+      });
+    });
+  </script>
+</body>
+</html>

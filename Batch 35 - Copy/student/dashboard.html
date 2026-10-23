@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Dashboard | CLASS HUB — Batch 35 — BSSE (Afternoon)</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/navbar.css">
+  <link rel="stylesheet" href="../css/cards.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/forms.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+  <!-- Supabase JS SDK -->
+    <!-- Supabase JS Client (Local bundle with CDN fallback) -->
+  <script src="../js/supabase.js"></script>
+  <script>if (!window.supabase) document.write('<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"><\/script>');</script>
+  <link rel="icon" type="image/svg+xml" href="../assets/icons/favicon.svg">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="site-navbar">
+    <div class="navbar-inner">
+      <a href="dashboard.html" class="navbar-brand">
+        <div class="brand-logo-icon">CH</div>
+        <div class="brand-text">
+          <span class="brand-name">CLASS HUB</span>
+          <span class="brand-cohort">Batch 35 — BSSE (Afternoon)</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <nav aria-label="Main Navigation">
+        <ul class="nav-links desktop-only">
+          <li><a href="dashboard.html" class="nav-link active">Dashboard</a></li>
+          <li><a href="subjects.html" class="nav-link">Subjects</a></li>
+          <li><a href="documents.html" class="nav-link">Documents</a></li>
+          <li><a href="queries.html" class="nav-link">Queries</a></li>
+          <li><a href="profile.html" class="nav-link">Profile</a></li>
+        </ul>
+      </nav>
+
+      <!-- User Menu -->
+      <div class="navbar-user">
+        <a href="profile.html" class="user-profile-badge" title="View your profile">
+          <div class="user-avatar">ST</div>
+          <div class="user-info">
+            <span class="user-name">Student</span>
+            <span class="user-role-label">Student</span>
+          </div>
+        </a>
+        <button type="button" class="btn-logout" aria-label="Log out of Class Hub">
+          🚪 Logout
+        </button>
+        <button type="button" class="mobile-nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+          ☰
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Drawer -->
+    <div class="mobile-nav-menu">
+      <ul class="nav-links">
+        <li><a href="dashboard.html" class="nav-link active">📊 Dashboard</a></li>
+        <li><a href="subjects.html" class="nav-link">📚 All Subjects</a></li>
+        <li><a href="documents.html" class="nav-link">📁 Study Documents</a></li>
+        <li><a href="queries.html" class="nav-link">💬 Academic Queries</a></li>
+        <li><a href="profile.html" class="nav-link">👤 My Profile</a></li>
+      </ul>
+      <div class="mobile-user-actions">
+        <span class="user-role-label role-badge student">Student</span>
+        <button type="button" class="btn-logout">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Wrapper -->
+  <main class="main-wrapper">
+    <!-- Welcome Section -->
+    <section class="welcome-banner">
+      <div class="welcome-text">
+        <h1 id="welcome-greeting">Welcome back! Here is your class update.</h1>
+        <p>Stay on track with Batch 35 class schedules, lab tasks, assignments, and lecture notes.</p>
+      </div>
+      <div class="welcome-meta">
+        <span class="date-pill" id="today-date">Loading date...</span>
+      </div>
+    </section>
+
+    <!-- Dashboard Two Column Grid -->
+    <div class="dashboard-layout">
+      <!-- Left Column: Main Academic Content -->
+      <div class="dashboard-main">
+        
+        <!-- Weekly Summary Section -->
+        <section class="weekly-summary-box">
+          <div class="summary-header">
+            <h2 class="card-title">📅 Current Week Overview</h2>
+            <span class="summary-pill">Active Week</span>
+          </div>
+          <div class="summary-metrics" id="weekly-summary-metrics">
+            <div class="summary-metric-item"><div class="spinner spinner-sm"></div></div>
+          </div>
+        </section>
+
+        <!-- Upcoming Tasks Section -->
+        <section class="card">
+          <div class="card-header">
+            <h2 class="card-title">⏰ Upcoming Tasks & Deadlines</h2>
+            <a href="documents.html" class="btn btn-sm btn-outline">All Deadlines &rarr;</a>
+          </div>
+          <div id="upcoming-tasks-list">
+            <div class="loading-overlay"><div class="spinner"></div></div>
+          </div>
+        </section>
+
+        <!-- Subjects Grid Section -->
+        <section>
+          <div class="page-header" style="margin-bottom:1.25rem;">
+            <div>
+              <h2 style="font-size:1.4rem;">📚 Academic Subjects</h2>
+              <p class="page-subtitle">Access theory lectures, lab manuals, and external course resources.</p>
+            </div>
+            <a href="subjects.html" class="btn btn-sm btn-outline">View All &rarr;</a>
+          </div>
+          <div class="subjects-grid" id="subjects-card-grid">
+            <div class="loading-overlay" style="grid-column: 1 / -1;"><div class="spinner"></div></div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- Right Column: Sidebar (Announcements & Quick Links) -->
+      <aside class="dashboard-sidebar">
+        
+        <!-- Quick Links Card -->
+        <section class="card">
+          <div class="card-header">
+            <h3 class="card-title">⚡ Quick Access</h3>
+          </div>
+          <div class="quick-links-grid">
+            <a href="subjects.html" class="quick-link-card">
+              <span class="quick-link-icon">📚</span>
+              <span class="quick-link-label">Subjects</span>
+            </a>
+            <a href="documents.html" class="quick-link-card">
+              <span class="quick-link-icon">📁</span>
+              <span class="quick-link-label">Documents</span>
+            </a>
+            <a href="queries.html" class="quick-link-card">
+              <span class="quick-link-icon">💬</span>
+              <span class="quick-link-label">Ask Query</span>
+            </a>
+            <a href="profile.html" class="quick-link-card">
+              <span class="quick-link-icon">👤</span>
+              <span class="quick-link-label">My Profile</span>
+            </a>
+          </div>
+        </section>
+
+        <!-- Recent Announcements Stream -->
+        <section class="card">
+          <div class="card-header">
+            <h3 class="card-title">📢 Class Announcements</h3>
+          </div>
+          <div id="recent-announcements-list">
+            <div class="loading-overlay"><div class="spinner"></div></div>
+          </div>
+        </section>
+
+      </aside>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <p>&copy; 2026 <span class="brand-title">CLASS HUB</span> — Batch 35 — BSSE (Afternoon). University Academic Portal.</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../js/config.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/main.js"></script>
+  <script src="../js/dashboard.js"></script>
+</body>
+</html>

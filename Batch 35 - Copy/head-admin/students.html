@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Students | CLASS HUB — Batch 35 — BSSE (Afternoon)</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/navbar.css">
+  <link rel="stylesheet" href="../css/cards.css">
+  <link rel="stylesheet" href="../css/admin.css">
+  <link rel="stylesheet" href="../css/forms.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+    <!-- Supabase JS Client (Local bundle with CDN fallback) -->
+  <script src="../js/supabase.js"></script>
+  <script>if (!window.supabase) document.write('<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"><\/script>');</script>
+  <link rel="icon" type="image/svg+xml" href="../assets/icons/favicon.svg">
+</head>
+<body>
+
+  <header class="site-navbar">
+    <div class="navbar-inner">
+      <a href="dashboard.html" class="navbar-brand">
+        <div class="brand-logo-icon" style="background:linear-gradient(135deg, #b91c1c, #dc2626);">HA</div>
+        <div class="brand-text">
+          <span class="brand-name">CLASS HUB</span>
+          <span class="brand-cohort">Batch 35 — BSSE (Afternoon)</span>
+        </div>
+      </a>
+      <nav aria-label="Head Admin Navigation">
+        <ul class="nav-links desktop-only">
+          <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
+          <li><a href="admins.html" class="nav-link">Admins</a></li>
+          <li><a href="students.html" class="nav-link active">Students</a></li>
+          <li><a href="settings.html" class="nav-link">Portal Settings</a></li>
+          <li><a href="../admin/subjects.html" class="nav-link">Subjects</a></li>
+          <li><a href="../admin/lectures.html" class="nav-link">Lectures</a></li>
+          <li><a href="../admin/documents.html" class="nav-link">Docs</a></li>
+          <li><a href="../admin/announcements.html" class="nav-link">Notices</a></li>
+          <li><a href="../admin/weekly-tasks.html" class="nav-link">Tasks</a></li>
+        </ul>
+      </nav>
+      <div class="navbar-user">
+        <div class="user-profile-badge">
+          <div class="user-avatar" style="background-color:#b91c1c;">HA</div>
+          <div class="user-info">
+            <span class="user-name">Head Admin</span>
+            <span class="user-role-label">Head Admin</span>
+          </div>
+        </div>
+        <button type="button" class="btn-logout">🚪 Logout</button>
+        <button type="button" class="mobile-nav-toggle" aria-label="Toggle navigation menu">☰</button>
+      </div>
+    </div>
+    <div class="mobile-nav-menu">
+      <ul class="nav-links">
+        <li><a href="dashboard.html" class="nav-link">📊 Head Admin Dashboard</a></li>
+        <li><a href="admins.html" class="nav-link">🛡️ Manage 9 Admins</a></li>
+        <li><a href="students.html" class="nav-link active">👥 Manage 40 Students</a></li>
+        <li><a href="settings.html" class="nav-link">⚙️ Portal Settings</a></li>
+        <li><a href="../admin/subjects.html" class="nav-link">📚 Academic Subjects</a></li>
+        <li><a href="../admin/lectures.html" class="nav-link">📝 Manage Lectures</a></li>
+        <li><a href="../admin/documents.html" class="nav-link">📁 Upload Documents</a></li>
+        <li><a href="../admin/announcements.html" class="nav-link">📢 Class Announcements</a></li>
+        <li><a href="../admin/weekly-tasks.html" class="nav-link">⏰ Weekly Tasks</a></li>
+      </ul>
+      <div class="mobile-user-actions">
+        <span class="role-badge head_admin">Head Administrator</span>
+        <button type="button" class="btn-logout">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-wrapper">
+    <header class="page-header">
+      <div class="page-title-group">
+        <h1>👥 Student Account Management</h1>
+        <p class="page-subtitle">Provision, activate, deactivate, and manage student credentials for Batch 35 (Max 40 Active Students).</p>
+      </div>
+      <div class="page-header-actions">
+        <button type="button" class="btn btn-primary" onclick="window.CLASS_HUB_UTILS.openModal('modal-create-student')">
+          ➕ Provision New Student
+        </button>
+      </div>
+    </header>
+
+    <!-- Top Status Bar & Search -->
+    <div class="card" style="margin-bottom:1.5rem;padding:1.25rem;">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
+        <div class="search-bar-wrapper">
+          <span class="search-icon-fixed">🔍</span>
+          <input type="search" id="search-students" class="form-control" placeholder="Search by name, username, or email...">
+        </div>
+        <span class="badge badge-primary" id="students-count-display" style="font-size:0.85rem;padding:0.4rem 0.8rem;">
+          -- / 40 Active Students
+        </span>
+      </div>
+    </div>
+
+    <!-- Students Data Table -->
+    <div class="table-responsive">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Full Name</th>
+            <th>Assigned Username</th>
+            <th>Assigned Email</th>
+            <th>Account Status</th>
+            <th>Created Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="students-table-body">
+          <tr><td colspan="6" style="text-align:center;padding:2rem;"><div class="spinner"></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- Create Student Modal -->
+  <dialog class="modal-dialog" id="modal-create-student">
+    <div class="modal-dialog-content">
+      <div class="modal-header">
+        <h2>Provision Student Account</h2>
+        <button type="button" class="modal-close-btn" data-close-modal="modal-create-student">&times;</button>
+      </div>
+      <form id="form-create-student">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="new-student-name" class="form-label">
+              <span>Full Name</span>
+              <span class="form-required">*</span>
+            </label>
+            <input type="text" id="new-student-name" class="form-control" placeholder="e.g., Ali Ahmed" required>
+          </div>
+          <div class="form-group">
+            <label for="new-student-username" class="form-label">
+              <span>Assigned Username (Unique)</span>
+              <span class="form-required">*</span>
+            </label>
+            <input type="text" id="new-student-username" class="form-control" placeholder="e.g., ali_ahmed35" required autocapitalize="none">
+            <span class="form-helper">This username will be used by the student to log in.</span>
+          </div>
+          <div class="form-group">
+            <label for="new-student-email" class="form-label">
+              <span>Assigned Email (Unique)</span>
+              <span class="form-required">*</span>
+            </label>
+            <input type="email" id="new-student-email" class="form-control" placeholder="e.g., ali.ahmed@university.edu" required autocapitalize="none">
+          </div>
+          <div class="form-group">
+            <label for="new-student-password" class="form-label">
+              <span>Initial Password (Min 6 chars)</span>
+              <span class="form-required">*</span>
+            </label>
+            <input type="password" id="new-student-password" class="form-control" placeholder="Create temporary secure password" required minlength="6">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-modal="modal-create-student">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Student Account</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <!-- Reset Password Modal -->
+  <dialog class="modal-dialog" id="modal-reset-password">
+    <div class="modal-dialog-content">
+      <div class="modal-header">
+        <h2>Reset Account Password</h2>
+        <button type="button" class="modal-close-btn" data-close-modal="modal-reset-password">&times;</button>
+      </div>
+      <form id="form-reset-password">
+        <input type="hidden" id="reset-password-user-id">
+        <div class="modal-body">
+          <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:1rem;">
+            Setting a new password for student: <strong id="reset-password-user-name" style="color:var(--text-main);"></strong>
+          </p>
+          <div class="form-group">
+            <label for="new-reset-password" class="form-label">
+              <span>New Password (Min 6 chars)</span>
+              <span class="form-required">*</span>
+            </label>
+            <input type="password" id="new-reset-password" class="form-control" placeholder="Enter new password" required minlength="6">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-modal="modal-reset-password">Cancel</button>
+          <button type="submit" class="btn btn-primary">Update Password</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 <span class="brand-title">CLASS HUB</span> — Batch 35 — BSSE (Afternoon). Head Administrator Console.</p>
+  </footer>
+
+  <script src="../js/config.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/main.js"></script>
+  <script src="../js/admin.js"></script>
+</body>
+</html>

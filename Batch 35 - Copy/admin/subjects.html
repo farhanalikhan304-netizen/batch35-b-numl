@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Subjects | CLASS HUB — Batch 35 — BSSE (Afternoon)</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/navbar.css">
+  <link rel="stylesheet" href="../css/cards.css">
+  <link rel="stylesheet" href="../css/admin.css">
+  <link rel="stylesheet" href="../css/forms.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+    <!-- Supabase JS Client (Local bundle with CDN fallback) -->
+  <script src="../js/supabase.js"></script>
+  <script>if (!window.supabase) document.write('<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"><\/script>');</script>
+  <link rel="icon" type="image/svg+xml" href="../assets/icons/favicon.svg">
+</head>
+<body>
+
+  <header class="site-navbar">
+    <div class="navbar-inner">
+      <a href="dashboard.html" class="navbar-brand">
+        <div class="brand-logo-icon">CH</div>
+        <div class="brand-text">
+          <span class="brand-name">CLASS HUB</span>
+          <span class="brand-cohort">Batch 35 — BSSE (Afternoon)</span>
+        </div>
+      </a>
+      <nav aria-label="Admin Navigation">
+        <ul class="nav-links desktop-only">
+          <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
+          <li><a href="students.html" class="nav-link">Students</a></li>
+          <li><a href="subjects.html" class="nav-link active">Subjects</a></li>
+          <li><a href="lectures.html" class="nav-link">Lectures</a></li>
+          <li><a href="documents.html" class="nav-link">Documents</a></li>
+          <li><a href="announcements.html" class="nav-link">Announcements</a></li>
+          <li><a href="weekly-tasks.html" class="nav-link">Tasks</a></li>
+          <li><a href="links.html" class="nav-link">Links</a></li>
+          <li><a href="queries.html" class="nav-link">Queries</a></li>
+        </ul>
+      </nav>
+      <div class="navbar-user">
+        <div class="user-profile-badge">
+          <div class="user-avatar" style="background-color:#d97706;">AD</div>
+          <div class="user-info">
+            <span class="user-name">Administrator</span>
+            <span class="user-role-label">Administrator</span>
+          </div>
+        </div>
+        <button type="button" class="btn-logout">🚪 Logout</button>
+        <button type="button" class="mobile-nav-toggle" aria-label="Toggle navigation menu">☰</button>
+      </div>
+    </div>
+    <div class="mobile-nav-menu">
+      <ul class="nav-links">
+        <li><a href="dashboard.html" class="nav-link">📊 Dashboard</a></li>
+        <li><a href="students.html" class="nav-link">👥 Students</a></li>
+        <li><a href="subjects.html" class="nav-link active">📚 Subjects</a></li>
+        <li><a href="lectures.html" class="nav-link">📝 Lectures</a></li>
+        <li><a href="documents.html" class="nav-link">📁 Documents</a></li>
+        <li><a href="announcements.html" class="nav-link">📢 Announcements</a></li>
+        <li><a href="weekly-tasks.html" class="nav-link">⏰ Weekly Tasks</a></li>
+        <li><a href="links.html" class="nav-link">🔗 Course Links</a></li>
+        <li><a href="queries.html" class="nav-link">💬 Student Queries</a></li>
+      </ul>
+      <div class="mobile-user-actions">
+        <span class="role-badge admin">Administrator</span>
+        <button type="button" class="btn-logout">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-wrapper">
+    <header class="page-header">
+      <div class="page-title-group">
+        <h1>📚 Academic Subjects Overview</h1>
+        <p class="page-subtitle">Batch 35 semester curriculum subjects and enrolled course modules.</p>
+      </div>
+      <div>
+        <a href="links.html" class="btn btn-outline">🔗 Manage Course Links</a>
+      </div>
+    </header>
+
+    <div class="subjects-grid" id="all-subjects-grid">
+      <div class="loading-overlay" style="grid-column: 1 / -1;"><div class="spinner"></div><span>Loading subjects...</span></div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 <span class="brand-title">CLASS HUB</span> — Batch 35 — BSSE (Afternoon). Admin Management Console.</p>
+  </footer>
+
+  <script src="../js/config.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/main.js"></script>
+  <script src="../js/subjects.js"></script>
+</body>
+</html>

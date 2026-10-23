@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | CLASS HUB — Batch 35 — BSSE (Afternoon)</title>
+  <meta name="description" content="Log in to Class Hub for Batch 35 — BSSE (Afternoon). Access announcements, subjects, lectures, and resources.">
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/cards.css">
+  <link rel="stylesheet" href="css/forms.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <!-- Supabase JS Client (Local bundle with CDN fallback) -->
+  <script src="js/supabase.js"></script>
+  <script>if (!window.supabase) document.write('<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"><\/script>');</script>
+</head>
+<body style="min-height:100vh;display:flex;flex-direction:column;background-color:var(--bg);">
+
+  <header class="site-navbar">
+    <div class="navbar-inner">
+      <a href="index.html" class="navbar-brand">
+        <div class="brand-logo-icon">CH</div>
+        <div class="brand-text">
+          <span class="brand-name">CLASS HUB</span>
+          <span class="brand-cohort">Batch 35 — BSSE (Afternoon)</span>
+        </div>
+      </a>
+      <span style="font-size:0.85rem;color:var(--text-light);">Academic Portal</span>
+    </div>
+  </header>
+
+  <main class="main-wrapper" style="display:flex;align-items:center;justify-content:center;flex:1;padding:2.5rem 1.5rem;">
+    <section class="card" style="max-width:440px;width:100%;padding:2.5rem 2rem;">
+      <div style="text-align:center;margin-bottom:2rem;">
+        <div class="brand-logo-icon" style="width:3.25rem;height:3.25rem;font-size:1.4rem;margin:0 auto 0.75rem auto;">CH</div>
+        <span class="badge badge-primary" style="margin-bottom:0.4rem;">Batch 35 — BSSE (Afternoon)</span>
+        <h1 style="font-size:1.6rem;color:var(--text-main);">CLASS HUB Login</h1>
+        <p style="font-size:0.875rem;color:var(--text-muted);margin-top:0.25rem;">
+          Enter your assigned academic credentials to access the portal.
+        </p>
+      </div>
+
+      <!-- Error feedback container -->
+      <div id="login-error-container" style="display:none;background-color:var(--danger-bg);border:1px solid var(--danger-border);color:var(--danger);padding:0.75rem 1rem;border-radius:var(--radius-md);margin-bottom:1.25rem;font-size:0.85rem;" role="alert">
+        <span id="login-error-message">Invalid credentials</span>
+      </div>
+
+      <form id="form-login" novalidate>
+        <div class="form-group" id="group-identifier">
+          <label for="login-identifier" class="form-label">
+            <span>Username or Assigned Email</span>
+            <span class="form-required">*</span>
+          </label>
+          <input 
+            type="text" 
+            id="login-identifier" 
+            name="identifier" 
+            class="form-control" 
+            placeholder="e.g., student_01 or name@university.edu" 
+            required 
+            autocomplete="username"
+            autocapitalize="none"
+          >
+          <span class="form-error-msg" id="error-identifier">Please enter your username or email.</span>
+        </div>
+
+        <div class="form-group" id="group-password">
+          <label for="login-password" class="form-label">
+            <span>Password</span>
+            <span class="form-required">*</span>
+          </label>
+          <div class="password-input-wrapper">
+            <input 
+              type="password" 
+              id="login-password" 
+              name="password" 
+              class="form-control" 
+              placeholder="Enter your password" 
+              required 
+              autocomplete="current-password"
+            >
+            <button 
+              type="button" 
+              id="btn-toggle-password" 
+              class="password-toggle-btn" 
+              aria-label="Show password"
+              title="Show or hide password"
+            >
+              👁️
+            </button>
+          </div>
+          <span class="form-error-msg" id="error-password">Please enter your password.</span>
+        </div>
+
+        <div style="margin-top:1.5rem;">
+          <button type="submit" id="btn-login-submit" class="btn btn-primary" style="width:100%;padding:0.75rem;">
+            Sign In to Portal
+          </button>
+        </div>
+      </form>
+
+      <div style="margin-top:1.75rem;padding-top:1.25rem;border-top:1px solid var(--border);text-align:center;font-size:0.8rem;color:var(--text-light);line-height:1.4;">
+        <span>🔒 Public registration is disabled. Student and faculty accounts are provisioned exclusively by authorized administrators.</span>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 <span class="brand-title">CLASS HUB</span> — Batch 35 — BSSE (Afternoon). University Academic Portal.</p>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      // Automatic redirect if already authenticated
+      try {
+        const session = await window.CLASS_HUB_AUTH?.getCurrentSession();
+        if (session) {
+          const profile = await window.CLASS_HUB_AUTH?.getCurrentProfile();
+          if (profile && profile.status === "active") {
+            let target = "student/dashboard.html";
+            if (profile.role === "head_admin") target = "head-admin/dashboard.html";
+            else if (profile.role === "admin") target = "admin/dashboard.html";
+            window.location.href = target;
+            return;
+          }
+        }
+      } catch (_) {}
+
+      const form = document.getElementById("form-login");
+      const identifierInput = document.getElementById("login-identifier");
+      const passwordInput = document.getElementById("login-password");
+      const togglePasswordBtn = document.getElementById("btn-toggle-password");
+      const submitBtn = document.getElementById("btn-login-submit");
+      const errorContainer = document.getElementById("login-error-container");
+      const errorMessage = document.getElementById("login-error-message");
+
+      // Password visibility toggle
+      togglePasswordBtn.addEventListener("click", () => {
+        const isPassword = passwordInput.getAttribute("type") === "password";
+        passwordInput.setAttribute("type", isPassword ? "text" : "password");
+        togglePasswordBtn.textContent = isPassword ? "🙈" : "👁️";
+        togglePasswordBtn.setAttribute("aria-label", isPassword ? "Hide password" : "Show password");
+      });
+
+      // Form submission
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        errorContainer.style.display = "none";
+
+        let isValid = true;
+        const identifier = identifierInput.value.trim();
+        const password = passwordInput.value;
+
+        // Reset errors
+        document.querySelectorAll(".form-group").forEach(g => g.classList.remove("has-error"));
+
+        if (!identifier) {
+          document.getElementById("group-identifier").classList.add("has-error");
+          isValid = false;
+        }
+
+        if (!password) {
+          document.getElementById("group-password").classList.add("has-error");
+          isValid = false;
+        }
+
+        if (!isValid) return;
+
+        try {
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = `<span class="spinner spinner-sm spinner-light"></span> Authenticating...`;
+
+          const result = await window.CLASS_HUB_AUTH.login(identifier, password);
+          
+          // Check for saved redirect destination
+          const intended = sessionStorage.getItem("intended_destination");
+          if (intended) {
+            sessionStorage.removeItem("intended_destination");
+            window.location.href = intended;
+          } else {
+            window.location.href = result.redirectUrl;
+          }
+        } catch (err) {
+          console.error("Login attempt failed:", err);
+          errorMessage.textContent = err.message || "Failed to sign in. Please verify your credentials.";
+          errorContainer.style.display = "block";
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = `Sign In to Portal`;
+        }
+      });
+    });
+  </script>
+</body>
+</html>

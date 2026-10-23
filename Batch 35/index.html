@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CLASS HUB — Batch 35 — BSSE (Afternoon)</title>
+  <meta name="description" content="Central academic portal for Batch 35 — BSSE (Afternoon). Access lectures, announcements, weekly tasks, and study materials.">
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/cards.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <!-- Supabase JS Client (Local bundle with CDN fallback) -->
+  <script src="js/supabase.js"></script>
+  <script>if (!window.supabase) document.write('<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"><\/script>');</script>
+</head>
+<body style="display:flex;flex-direction:column;min-height:100vh;background-color:var(--bg);">
+
+  <header class="site-navbar">
+    <div class="navbar-inner">
+      <a href="index.html" class="navbar-brand">
+        <div class="brand-logo-icon">CH</div>
+        <div class="brand-text">
+          <span class="brand-name">CLASS HUB</span>
+          <span class="brand-cohort">Batch 35 — BSSE (Afternoon)</span>
+        </div>
+      </a>
+      <div>
+        <a href="login.html" class="btn btn-primary btn-sm">Portal Login &rarr;</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-wrapper" style="display:flex;align-items:center;justify-content:center;flex:1;padding:3rem 1.5rem;">
+    <section class="card" style="max-width:580px;width:100%;text-align:center;padding:2.5rem 2rem;">
+      <div class="brand-logo-icon" style="width:4rem;height:4rem;font-size:1.8rem;margin:0 auto 1.25rem auto;">CH</div>
+      <span class="badge badge-primary" style="margin-bottom:0.75rem;">Batch 35 — BSSE (Afternoon)</span>
+      <h1 style="font-size:2rem;margin-bottom:0.75rem;">CLASS HUB</h1>
+      <p style="color:var(--text-muted);font-size:1.05rem;line-height:1.6;margin-bottom:2rem;">
+        The central academic portal for university students and faculty. Access weekly task schedules, lecture materials, lab manuals, announcements, and university resources.
+      </p>
+
+      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+        <a href="login.html" class="btn btn-primary btn-lg" style="min-width:200px;">
+          Log In to Portal &rarr;
+        </a>
+      </div>
+
+      <div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border);display:flex;justify-content:center;gap:1.5rem;font-size:0.85rem;color:var(--text-light);flex-wrap:wrap;">
+        <span>🔒 Secure Role-Based Access</span>
+        <span>📁 Document Storage</span>
+        <span>📢 Real-time Updates</span>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 <span class="brand-title">CLASS HUB</span> — Batch 35 — BSSE (Afternoon). All rights reserved.</p>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    // Automatic redirect if already authenticated
+    document.addEventListener("DOMContentLoaded", async () => {
+      if (window.supabaseClient) {
+        const session = await window.CLASS_HUB_AUTH.getCurrentSession();
+        if (session) {
+          const profile = await window.CLASS_HUB_AUTH.getCurrentProfile();
+          if (profile && profile.status === "active") {
+            if (profile.role === "head_admin") {
+              window.location.href = "head-admin/dashboard.html";
+            } else if (profile.role === "admin") {
+              window.location.href = "admin/dashboard.html";
+            } else {
+              window.location.href = "student/dashboard.html";
+            }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

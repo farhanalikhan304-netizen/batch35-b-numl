@@ -1,0 +1,156 @@
+/* ==============================================================================
+   BATCH 35 — BSSE (Afternoon) — CLASS HUB
+   Responsive Layout & Mobile First Media Queries
+   ============================================================================== */
+
+/* Tablet & Mobile Breakpoints (max-width: 1024px) */
+@media (max-width: 1024px) {
+  .dashboard-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .main-wrapper {
+    padding: 1.5rem 1.25rem;
+  }
+}
+
+/* Tablet Breakpoint (max-width: 768px) */
+@media (max-width: 768px) {
+  /* Navigation */
+  .nav-links.desktop-only {
+    display: none;
+  }
+
+  .mobile-nav-toggle {
+    display: block;
+  }
+
+  .user-info {
+    display: none;
+  }
+
+  /* Page Headers */
+  .page-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .page-header-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .page-header-actions .btn,
+  .page-header-actions .search-bar-wrapper {
+    flex: 1 1 auto;
+    min-width: 140px;
+  }
+
+  /* Grids */
+  .subjects-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .welcome-banner {
+    padding: 1.5rem;
+  }
+
+  .welcome-text h1 {
+    font-size: 1.5rem;
+  }
+
+  /* Cards */
+  .task-item {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .document-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .document-item .btn {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+
+  /* Tables */
+  .data-table th, .data-table td {
+    padding: 0.65rem 0.75rem;
+  }
+
+  .table-actions {
+    flex-wrap: wrap;
+  }
+}
+
+/* Mobile Screens (max-width: 480px) */
+@media (max-width: 480px) {
+  .main-wrapper {
+    padding: 1rem 0.85rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .brand-cohort {
+    display: none;
+  }
+
+  .welcome-banner {
+    padding: 1.25rem;
+  }
+
+  .welcome-text h1 {
+    font-size: 1.35rem;
+  }
+
+  .welcome-text p {
+    font-size: 0.9rem;
+  }
+
+  .date-pill {
+    font-size: 0.75rem;
+    padding: 0.35rem 0.65rem;
+  }
+
+  .quick-links-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .section-switcher {
+    width: 100%;
+  }
+
+  .section-switch-btn {
+    flex: 1;
+    text-align: center;
+    padding: 0.5rem;
+  }
+
+  /* Touch targets minimum 44px */
+  .btn, .form-control, .action-btn {
+    min-height: 44px;
+  }
+
+  .toast {
+    width: 95%;
+  }
+
+  dialog.modal-dialog {
+    width: 95%;
+    max-height: 95vh;
+  }
+
+  .modal-header, .modal-body, .modal-footer {
+    padding: 1rem;
+  }
+}
